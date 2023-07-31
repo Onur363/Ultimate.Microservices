@@ -1,0 +1,90 @@
+﻿
+@{
+  ViewData["Title"] = "Index";
+}
+
+@model BasketViewModel
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">
+          Sepet
+        </h5>
+        @if (Model != null && Model.BasketItems.Any())
+        {
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Kurs İsmi</th>
+                <th>Kurs Fiyat</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var item in Model.BasketItems)
+              {
+                <tr>
+                  <td>@item.CourseName </td>
+                  <td>@item.GetCurrentPrice TL @(Model.HasDiscount?$"(%{Model.DiscountRate.Value} indirim uygulandı)":string.Empty)</td>
+                  <td>
+                    <a class="btn btn-danger" asp-controller="Basket" asp-action="RemoveBasketItem" asp-route-courseId="@item.CourseId">Sil</a>
+                  </td>
+                </tr>
+              }
+              @if (Model.HasDiscount)
+              {
+                <tr>
+                  <td>İndirim Oranı</td>
+                  <th colspan="2">@Model.DiscountRate.Value %</th>
+                </tr>
+              }
+
+              <tr>
+                <td>@(Model.HasDiscount ? "İndirimli Fiyat" : "Toplam Fiyat")</td>
+                <th colspan="2">@Model.TotalPrice</th>
+              </tr>
+
+            </tbody>
+          </table>
+          <form asp-controller="Basket" asp-action="ApplyDiscount">
+
+            @if (Model.HasDiscount)
+            {
+              <div class="alert alert-success">
+                @Model.DiscountCode indirim kodu uygulandı
+                <a asp-controller="Basket" asp-action="CancelApplyDiscount">(iptal et)</a>
+              </div>
+            }
+
+
+            <div class="input-group mb-3">
+              <input type="text" name="DiscountApplyInput.Code" class="form-control" />
+              <button type="submit" class="btn btn-outline-secondary">Uygula</button>
+            </div>
+
+            @if (TempData["discountStatus"] != null && (bool)TempData["discountStatus"] == false)
+            {
+              <div class="text-danger">
+                indirim kodu geçersiz
+              </div>
+            }
+
+            @if (TempData["discountError"]!=null)
+            {
+              <div class="text-danger">@TempData["discountError"].ToString()</div>
+            }
+          </form>
+          <a class="btn btn-success" asp-action="CheckOut" asp-controller="Order">Ödeme Bilgileri</a>
+          <a class="btn btn-success" asp-action="Home" asp-controller="Index">Kursları incelemeye devam et</a>
+        }
+        else
+        {
+          <div class="alert alert-info">Sepetiniz boş alışveriş e devam etmek için lütfen <a asp-controller="Home" asp-action="Index">tıklayınız... </a></div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+

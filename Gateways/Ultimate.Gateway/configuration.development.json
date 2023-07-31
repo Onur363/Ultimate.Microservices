@@ -1,0 +1,139 @@
+{
+  "Routes": [
+    {
+      //Clienttan gelen deðere karþýlýk microservice yönencek deðeri belirtir
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5011
+        }
+      ],
+      //Client ýn istek yapacaðý yeri belirtir 
+      "UpstreamPathTemplate": "/services/catalog/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": { //Ýlgili microservice için Authentication kontolü yapýlýyor þartlarý saðlamazsa client a geri dönüyor
+        "AuthenticationProviderKey": "GatewayAuthenticationScheme",
+        "AllowedScopes": ["catalog_fullpermission"]
+      }
+    },
+
+    {
+      //Clienttan gelen deðere karþýlýk microservice yönencek deðeri belirtir
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5012
+        }
+      ],
+      //Client ýn istek yapacaðý yeri belirtir 
+      "UpstreamPathTemplate": "/services/photostock/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": { //Ýlgili microservice için Authentication kontolü yapýlýyor þartlarý saðlamazsa client a geri dönüyor
+        "AuthenticationProviderKey": "GatewayAuthenticationScheme",
+        "AllowedScopes": [ "photo_stock_fullpermission" ]
+      }
+    },
+
+    {
+      //Clienttan gelen deðere karþýlýk microservice yönencek deðeri belirtir
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5013
+        }
+      ],
+      //Client ýn istek yapacaðý yeri belirtir 
+      "UpstreamPathTemplate": "/services/basket/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": { //Ýlgili microservice için Authentication kontolü yapýlýyor þartlarý saðlamazsa client a geri dönüyor
+        "AuthenticationProviderKey": "GatewayAuthenticationScheme",
+        "AllowedScopes": [ "basket_fullpermission" ]
+      }
+    },
+
+    {
+      //Clienttan gelen deðere karþýlýk microservice yönencek deðeri belirtir
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5014
+        }
+      ],
+      //Client ýn istek yapacaðý yeri belirtir 
+      "UpstreamPathTemplate": "/services/discount/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "UpstreamScheme": "http",
+      "DelegatingHandlers": [ "TokenExchangeDelegateHandler" ],
+      "AuthenticationOptions": { //Ýlgili microservice için Authentication kontolü yapýlýyor þartlarý saðlamazsa client a geri dönüyor
+        "AuthenticationProviderKey": "GatewayAuthenticationScheme"
+        //"AllowedScopes": [ "discount_fullpermission" ]
+      }
+    },
+
+    {
+      //Clienttan gelen deðere karþýlýk microservice yönencek deðeri belirtir
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5015
+        }
+      ],
+      //Client ýn istek yapacaðý yeri belirtir 
+      "UpstreamPathTemplate": "/services/order/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": { //Ýlgili microservice için Authentication kontolü yapýlýyor þartlarý saðlamazsa client a geri dönüyor
+        "AuthenticationProviderKey": "GatewayAuthenticationScheme",
+        "AllowedScopes": [ "order_fullpermission" ]
+      }
+    },
+
+    {
+      //Clienttan gelen deðere karþýlýk microservice yönencek deðeri belirtir
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5016
+        }
+      ],
+      //Client ýn istek yapacaðý yeri belirtir 
+      "UpstreamPathTemplate": "/services/fakepayment/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "UpstreamScheme": "http",
+      "DelegatingHandlers": "TokenExchangeDelegateHandler",
+      "AuthenticationOptions": { //Ýlgili microservice için Authentication kontolü yapýlýyor þartlarý saðlamazsa client a geri dönüyor
+        "AuthenticationProviderKey": "GatewayAuthenticationScheme"
+        //"AllowedScopes": [ "payment_fullpermission" ] artýk gelen token payment full permission deðerleriolmayacak
+        //bunlar Mvc Client tarafýndan ilgili Order veya Baþka MicroServicelere gelir.Bu microservicler den payment a istek yaptýðýnda
+        //TokenExchange delegesi aktif olacak ve 
+      }
+    }
+
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5000"
+  }
+}
+
+/*
+  UpStream de client dan yazýlan everything deðeri ne ise DownSrtream deki everything kýsmýna yazoýlmýþ olacak
+
+  http://localhost:5000/services/catalog/{everything}
+
+  http://localhost:5000/service/catalog/course/savecourse -> http://localhost:5000/api/course/savecourse
+*/
